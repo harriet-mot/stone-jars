@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Leo and Hannah's stone jars</title>
+  <style>
+      body {
+            margin: 0;
+            background: #E6E2D9;
+            color: #1E2A2F;
+            font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.45;
+      }
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 28px 20px 48px; }
+      h1 { font-size: 34px; line-height: 1.1; margin: 0 0 6px; font-weight: bold; }
+      .sub { color: #5C6B70; margin: 0 0 18px; }
+
+      .months { margin: 0 0 24px; padding: 0; list-style: none; }
+      .months li { display: inline-block; margin: 0 8px 8px 0; }
+      .months button {
+            font: inherit; font-weight: bold; color: #1E2A2F; background: #F7F5F0;
+            border: none; border-radius: 999px; padding: 10px 20px; min-height: 44px;
+      }
+      .months button.active { background: #2F6F8F; color: #fff; }
+
+      .kid { background: #F7F5F0; border-radius: 24px; padding: 22px; margin-bottom: 20px; }
+      .kid h2 { margin: 0; font-size: 30px; font-weight: bold; }
+      .total { margin: 4px 0; color: #5C6B70; }
+      .total b { font-size: 38px; color: #1E2A2F; }
+      .delta { margin: 2px 0 14px; color: #5C6B70; font-size: 16px; }
+
+      .jar { display: block; width: 100%; max-width: 280px; margin: 8px auto 18px; text-align: center; }
+      .jar img, .jar svg { width: 100%; height: auto; }
+
+      .bars { list-style: none; margin: 0; padding: 0; }
+      .bars li { margin-bottom: 12px; }
+      .lbl { display: block; font-size: 15px; margin-bottom: 4px; }
+      .track { display: block; height: 18px; background: #DDE5E6; border-radius: 999px; }
+      .fill { display: block; height: 100%; border-radius: 999px; }
+      .fill.black { background: #151515; }
+      .fill.white { background: #F8F8F4; border: 2px solid #1E2A2F; }
+      .val { font-weight: bold; }
+
+      .history { margin-top: 10px; background: #F7F5F0; border-radius: 24px; padding: 22px; }
+      .history h2 { margin: 0 0 14px; font-size: 24px; }
+      .hrow { margin-bottom: 12px; }
+      .hrow .m { font-weight: bold; display: block; margin-bottom: 4px; }
+      .hbar { font-size: 15px; margin-bottom: 4px; }
+      .hbar .track { display: inline-block; width: 60%; vertical-align: middle; height: 12px; }
+      .hbar .fill { display: inline-block; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+        <h1>Our stone jars</h1>
+      <p class="sub">Every stone is one activity finished after school. Leo's stones are black and Hannah's are white.</p>p>
+      <ul class="months" id="months"></ul>ul>
+      <div id="kids"></div>div>
+      <div class="history">
+          <h2>Over time</h2>
+          <div id="hist-body"></div>div>
+      </div>div>
+    </div>div>
+  
+  <script>
+    var PERIODS = [
+      { label: "September so far", short: "September", kind: "month",
+           leo:    [3, 1, 3, 7, 4, 2],
+           hannah: [3, 1, 0, 5, 4, 3] }
+      ];
+
+    var ACTIVITIES = [
+        "Piano practice", "Piano theory", "Trumpet practice",
+        "Duolingo French", "Homework", "Reading"
+      ];
+    var KIDS = [
+      { key: "leo", name: "Leo", tone: "black" },
+      { key: "hannah", name: "Hannah", tone: "white" }
+      ];
+
+    function sum(a) { var t = 0; for (var i = 0; i < a.length; i++) t += a[i]; return t; }
+
+    function jarHTML(count, tone) {
+        var rows = [];
+        var perRow = 8, total = count, i = 0;
+        while (i < total) {
+              var thisRow = Math.min(perRow, total - i);
+              var stones = "";
+              for (var j = 0; j < thisRow; j++) {
+                      stones += '<span style="display:inline-block;width:22px;height:16px;margin:2px;' +
+                                'border-radius:50%;background:' + (tone === "black" ? "#151515" : "#F8F8F4") +
+                                ';border:2px solid #1E2A2F;"></span>';
+              }
+              rows.push(stones);
+              i += perRow;
+        }
+        return '<div style="background:#C9DADD;border:4px solid #9DB9BF;border-radius:0 0 18px 18px;' +
+              'padding:10px 8px;min-height:60px;text-align:center;">' + rows.join('<br>') + '</div>' +
+              '<div style="background:#C9DADD;height:10px;border-radius:8px 8px 0 0;margin:0 20px;"></div>';
+    }
+
+    function render(idx) {
+        var m = PERIODS[idx], prev = idx > 0 ? PERIODS[idx - 1] : null;
+        var all = m.leo.concat(m.hannah);
+        var top = 1;
+        for (var t = 0; t < all.length; t++) if (all[t] > top) top = all[t];
+
+        var html = "";
+        for (var k = 0; k < KIDS.length; k++) {
+              var kid = KIDS[k], counts = m[kid.key], total = sum(counts), note;
+              if (!prev) { note = "First entry in the jar"; }
+              else {
+                      var d = total - sum(prev[kid.key]);
+                      note = d > 0 ? (d + " more than " + prev.short) :
+                                     d < 0 ? ((-d) + " fewer than " + prev.short) : ("Same as " + prev.short);
+              }
+              html += '<div class="kid"><h2>' + kid.name + '</h2>' +
+                      '<p class="total"><b>' + total + '</b> stones</p>' +
+                      '<p class="delta">' + note + '</p>' +
+                      '<div class="jar">' + jarHTML(total, kid.tone) + '</div>' +
+                      '<ul class="bars">';
+              for (var a = 0; a < ACTIVITIES.length; a++) {
+                      var pct = Math.max(Math.round(counts[a] / top * 100), counts[a] ? 4 : 0);
+                      html += '<li><span class="lbl">' + ACTIVITIES[a] + '</span>' +
+                                '<span class="track"><span class="fill ' + kid.tone + '" style="width:' + pct + '%"></span></span> ' +
+                                '<span class="val">' + counts[a] + '</span></li>';
+              }
+              html += '</ul></div>';
+        }
+        document.getElementById("kids").innerHTML = html;
+        var btns = document.getElementById("months").getElementsByTagName("button");
+        for (var b = 0; b < btns.length; b++) {
+              btns[b].className = (b === idx) ? "active" : "";
+        }
+    }
+
+    function buildMonths() {
+        var ul = document.getElementById("months"), html = "";
+        for (var i = 0; i < PERIODS.length; i++) {
+              html += '<li><button type="button" onclick="render(' + i + ')">' + PERIODS[i].label + '</button></li>';
+        }
+        ul.innerHTML = html;
+    }
+
+    function buildHistory() {
+        var max = 1;
+        for (var i = 0; i < PERIODS.length; i++) {
+              var m = PERIODS[i];
+              max = Math.max(max, sum(m.leo), sum(m.hannah));
+        }
+        var html = "";
+        for (i = 0; i < PERIODS.length; i++) {
+              var m = PERIODS[i];
+              html += '<div class="hrow"><span class="m">' + m.short + '</span>';
+              for (var k = 0; k < KIDS.length; k++) {
+                      var kid = KIDS[k], t = sum(m[kid.key]);
+                      var pct = Math.round(t / max * 100);
+                      html += '<div class="hbar"><span class="track"><span class="fill ' + kid.tone +
+                                '" style="width:' + pct + '%"></span></span> ' + kid.name + ' ' + t + '</div>';
+              }
+              html += '</div>';
+        }
+        document.getElementById("hist-body").innerHTML = html;
+    }
+
+    buildMonths();
+    buildHistory();
+    render(PERIODS.length - 1);
+  </script>
+  </body>
+</html>html>
+
+  </script></h2></h1>
+  </body>
+  </style></title>
+  </head>
