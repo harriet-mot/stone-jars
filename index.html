@@ -35,16 +35,10 @@
   .total b { font-size: 40px; color: #1E2A2F; }
   .delta { margin: 2px 0 16px; color: #5C6B70; font-size: 16px; }
 
-  .jar { display: block; width: 100%; max-width: 260px; margin: 8px auto 20px; }
-  .jar svg { display: block; width: 100%; height: auto; }
-  .stone { -webkit-animation: drop .5s ease-out backwards; animation: drop .5s ease-out backwards; }
-  @-webkit-keyframes drop { from { -webkit-transform: translateY(-100px); opacity: 0; } to { -webkit-transform: none; opacity: 1; } }
-  @keyframes drop { from { transform: translateY(-100px); opacity: 0; } to { transform: none; opacity: 1; } }
-
   .bars { list-style: none; margin: 0; padding: 0; }
   .bars li { margin-bottom: 13px; }
   .lbl { display: block; font-size: 15px; margin-bottom: 4px; }
-  .track { display: block; height: 20px; background: #DDE5E6; border-radius: 999px; overflow: hidden; }
+  .track { display: block; height: 28px; margin-right: 48px; background: #DDE5E6; border-radius: 999px; overflow: hidden; }
   .fill { display: block; height: 100%; border-radius: 999px;
           -webkit-transform-origin: left; transform-origin: left;
           -webkit-animation: grow .6s ease-out backwards; animation: grow .6s ease-out backwards; }
@@ -52,15 +46,15 @@
   @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .fill.black { background: #151515; }
   .fill.white { background: #F8F8F4; -webkit-box-shadow: inset 0 0 0 2px #1E2A2F; box-shadow: inset 0 0 0 2px #1E2A2F; }
-  .val { font-weight: bold; float: right; margin-top: -22px; position: relative; }
+  .val { font-weight: bold; float: right; margin-top: -28px; line-height: 28px; position: relative; }
 
   .history { margin-top: 6px; background: #F7F5F0; border-radius: 28px; padding: 24px; }
   .history h2 { margin: 0 0 16px; font-size: 26px; }
   .hrow { margin-bottom: 14px; }
   .hrow .m { font-weight: bold; display: block; margin-bottom: 6px; }
   .hbar { font-size: 15px; margin-bottom: 5px; }
-  .hbar .track { display: inline-block; width: 55%; vertical-align: middle; height: 14px; }
-  .hbar .fill { display: inline-block; -webkit-animation: none; animation: none; }
+  .hbar .track { display: inline-block; width: 55%; margin-right: 0; vertical-align: middle; height: 20px; }
+  .hbar .fill { display: block; -webkit-animation: none; animation: none; }
 </style>
 </head>
 <body>
@@ -85,40 +79,6 @@ var KIDS = [
 ];
 
 function sum(a) { var t = 0; for (var i = 0; i < a.length; i++) t += a[i]; return t; }
-function rnd(i, salt) { var x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453; return x - Math.floor(x); }
-
-function jarSVG(count, tone, uid) {
-  var fill = tone === "black" ? "#151515" : "#F8F8F4";
-  var stroke = "#1E2A2F";
-  var perRow = count <= 40 ? 5 : 10;
-  var w = count <= 40 ? 36 : 19;
-  var rowH = count <= 40 ? 26 : 15;
-  var rxBase = count <= 40 ? 15 : 8.6, ryBase = count <= 40 ? 10 : 6;
-  var bottom = 298, left = 30;
-  var pad = (200 - perRow * w - w / 2) / 2;
-  var stones = "";
-  for (var i = 0; i < count; i++) {
-    var row = Math.floor(i / perRow), col = i % perRow;
-    var x = left + pad + w / 2 + col * w + (row % 2 ? w / 2 : 0) + (rnd(i, 1) - 0.5) * 3;
-    var y = bottom - ryBase - 3 - row * rowH + (rnd(i, 2) - 0.5) * 3;
-    var rx = rxBase + rnd(i, 3) * 1.4, ry = ryBase + rnd(i, 4) * 1.2;
-    var rot = Math.round((rnd(i, 5) - 0.5) * 50);
-    var delay = Math.min(i * 25, 900);
-    stones += '<ellipse class="stone" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" rx="' + rx.toFixed(1) +
-      '" ry="' + ry.toFixed(1) + '" transform="rotate(' + rot + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) +
-      ')" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.2" style="animation-delay:' + delay + 'ms;-webkit-animation-delay:' + delay + 'ms;"></ellipse>';
-  }
-  var body = "M52 40 L52 62 Q30 72 30 96 L30 282 Q30 306 54 306 L206 306 Q230 306 230 282 L230 96 Q230 72 208 62 L208 40 Z";
-  return '<svg viewBox="0 0 260 320" role="img" aria-label="' + tone + ' stone jar with ' + count + ' stones">' +
-    '<defs><clipPath id="clip-' + uid + '"><path d="' + body + '"></path></clipPath></defs>' +
-    '<path d="' + body + '" fill="#9DB9BF"></path>' +
-    '<g clip-path="url(#clip-' + uid + ')">' + stones + '</g>' +
-    '<path d="' + body + '" fill="none" stroke="#C9DADD" stroke-width="5"></path>' +
-    '<rect x="44" y="30" width="172" height="14" rx="7" fill="#C9DADD"></rect>' +
-    '<path d="M44 100 L44 250" stroke="#ffffff" stroke-opacity=".35" stroke-width="7" stroke-linecap="round"></path>' +
-    '</svg>';
-}
-
 function kidsHTML(idx) {
   var m = PERIODS[idx], prev = idx > 0 ? PERIODS[idx - 1] : null;
   var all = m.leo.concat(m.hannah);
@@ -136,7 +96,6 @@ function kidsHTML(idx) {
     html += '<div class="kid"><h2>' + kid.name + '</h2>' +
       '<p class="total"><b>' + total + '</b> stones</p>' +
       '<p class="delta">' + note + '</p>' +
-      '<div class="jar">' + jarSVG(total, kid.tone, kid.key + idx) + '</div>' +
       '<ul class="bars">';
     for (var a = 0; a < ACTIVITIES.length; a++) {
       var pct = Math.max(Math.round(counts[a] / top * 100), counts[a] ? 4 : 0);
