@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leo and Hannah's stone jars</title>
+<title>Stewart After School Activity Tracker</title>
 <style>
   body {
     margin: 0;
@@ -13,11 +13,11 @@
     font-size: 18px;
     line-height: 1.45;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 28px 20px 48px; }
-  h1 { font-size: 38px; line-height: 1.1; margin: 0 0 6px; font-weight: bold; letter-spacing: -0.01em; }
-  .sub { color: #5C6B70; margin: 0 0 20px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 18px 20px 40px; }
+  h1 { font-size: 38px; line-height: 1.1; margin: 0 0 4px; font-weight: bold; letter-spacing: -0.01em; }
+  .sub { color: #5C6B70; margin: 0 0 12px; }
 
-  .months { margin: 0 0 26px; padding: 0; list-style: none; }
+  .months { margin: 0 0 8px; padding: 0; list-style: none; }
   .months li { display: inline-block; margin: 0 8px 8px 0; }
   .months button {
     font: inherit; font-weight: bold; color: #1E2A2F; background: #F7F5F0;
@@ -27,17 +27,17 @@
 
   .kids { display: -webkit-box; display: -webkit-flex; display: flex;
           -webkit-flex-wrap: wrap; flex-wrap: wrap; margin: 0 -10px; }
-  .kid { background: #F7F5F0; border-radius: 28px; padding: 24px 24px 28px;
+  .kid { background: #F7F5F0; border-radius: 28px; padding: 18px 24px 16px;
          -webkit-box-flex: 1; -webkit-flex: 1 1 380px; flex: 1 1 380px;
          margin: 0 10px 20px; min-width: 280px; }
   .kid h2 { margin: 0; font-size: 32px; font-weight: bold; }
-  .total { margin: 6px 0 0; color: #5C6B70; }
+  .total { margin: 0; color: #5C6B70; }
   .total b { font-size: 40px; color: #1E2A2F; }
-  .delta { margin: 2px 0 16px; color: #5C6B70; font-size: 16px; }
+  .delta { margin: 0 0 10px; color: #5C6B70; font-size: 16px; }
 
   .bars { list-style: none; margin: 0; padding: 0; }
-  .bars li { margin-bottom: 13px; }
-  .lbl { display: block; font-size: 15px; margin-bottom: 4px; }
+  .bars li { margin-bottom: 6px; }
+  .lbl { display: block; font-size: 15px; margin-bottom: 1px; }
   .track { display: block; height: 28px; margin-right: 48px; background: #DDE5E6; border-radius: 999px; overflow: hidden; }
   .fill { display: block; height: 100%; border-radius: 999px;
           -webkit-transform-origin: left; transform-origin: left;
@@ -140,7 +140,7 @@ function historyHTML() {
 function renderPage(idx) {
   document.getElementById("app").innerHTML =
     '<div class="wrap">' +
-      '<h1>Our stone jars</h1>' +
+      '<h1>Stewart After School Activity Tracker</h1>' +
       '<p class="sub">Every stone is one activity finished after school. Leo\'s stones are black and Hannah\'s are white.</p>' +
       '<ul class="months" id="months">' + monthsHTML() + '</ul>' +
       '<div class="kids" id="kids">' + kidsHTML(idx) + '</div>' +
